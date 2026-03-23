@@ -24,16 +24,19 @@ describe('TodoController', () => {
         {
           id: 1,
           title: 'Learn NestJS basics',
+          content: 'Learn about NestJS basics',
           completed: false,
         },
         {
           id: 2,
           title: 'Learn about NestJS decorators',
+          content: 'Learn about NestJS decorators',
           completed: false,
         },
         {
           id: 3,
           title: 'Learn about NestJS pipes',
+          content: 'Learn about NestJS pipes',
           completed: false,
         },
       ],
@@ -61,6 +64,7 @@ describe('TodoController', () => {
       data: {
         id: 2,
         title: 'Learn about NestJS decorators',
+        content: 'Learn about NestJS decorators',
         completed: true,
       },
     });
@@ -74,6 +78,7 @@ describe('TodoController', () => {
       data: {
         id: 2,
         title: 'Learn about NestJS decorators',
+        content: 'Learn about NestJS decorators',
         completed: false,
       },
     });

@@ -3,6 +3,17 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "plugins": ["@nestjs/swagger"],
+    "typeCheck": true,
+    "builder": {
+      "type": "swc",
+      "options": {
+        "ignore": [
+          "src/todo/dto/todo-response.dto.js",
+          "src/todo/entities/todo.entity.js"
+        ]
+      }
+    }
   }
 }
