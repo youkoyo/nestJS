@@ -2,9 +2,14 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TodosModule } from './todos/todos.module';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
+import config from '../mikro-orm.config';
 
 @Module({
-  imports: [TodosModule],
+  imports: [
+    MikroOrmModule.forRoot({ ...config, autoLoadEntities: true }),
+    TodosModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,34 +1,45 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
-import { EntityManager, EntityRepository } from '@mikro-orm/postgresql';
+import { EntityRepository } from '@mikro-orm/postgresql';
 import { Todo } from './entities/todo.entity';
 
 @Injectable()
 export class TodosService {
   constructor(
-    private readonly em: EntityManager,
     @InjectRepository(Todo)
     private readonly todoRepository: EntityRepository<Todo>,
   ) {}
-  create(createTodoDto: CreateTodoDto) {
-    return 'This action adds a new todo' + createTodoDto.title;
+
+  async create(createTodoDto: CreateTodoDto) {
+    const todo = this.todoRepository.create(createTodoDto);
+    await this.todoRepository.getEntityManager().persist(todo).flush();
+    return todo;
   }
 
-  findAll() {
-    return `This action returns all todos`;
+  async findAll() {
+    return await this.todoRepository.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} todo`;
+  async findOne(id: number) {
+    const todo = await this.todoRepository.findOne(id);
+    if (!todo) {
+      throw new NotFoundException('Todo not found');
+    }
+    return todo;
   }
 
-  update(id: number, updateTodoDto: UpdateTodoDto) {
-    return `This action updates a #${id} todo` + updateTodoDto.title;
+  async update(id: number, updateTodoDto: UpdateTodoDto) {
+    const todo = await this.findOne(id);
+    this.todoRepository.getEntityManager().assign(todo, updateTodoDto);
+    await this.todoRepository.getEntityManager().flush();
+    return todo;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} todo`;
+  async remove(id: number) {
+    const todo = await this.findOne(id);
+    await this.todoRepository.getEntityManager().remove(todo).flush();
+    return todo;
   }
 }
